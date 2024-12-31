@@ -2,7 +2,7 @@
 name     = "Metadata Gateway"
 author   = "XertroV"
 category = "Dev"
-version  = "0.1.5"
+version  = "0.1.6"
 
 [script]
 #__DEFINES__
