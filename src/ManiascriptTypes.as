@@ -13,7 +13,9 @@ enum MsType {
 
     // Are these always the same?
     TextArray = 0x227,
-    IntArray = 0x467,
+
+    IntArray = 0x2e7,
+    // IntArray = 0x467,
     TextArrayByInt = 0x4A7,
     TextArrayByText = 0x6A7,
     IntArrayByText = 0xE27,
@@ -31,6 +33,7 @@ string x = """
 0xF = Int3
 
 0x227 = net Text[]
+0x2e7 = Integer[]
 
 0x467 = Integer[]
 0x4a7 = Text[Integer]

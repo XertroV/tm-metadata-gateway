@@ -3,6 +3,7 @@ const string MenuIconColor = "\\$f5d";
 const string PluginIcon = Icons::Cogs;
 const string MenuTitle = MenuIconColor + PluginIcon + "\\$z " + PluginName;
 
+[Setting hidden]
 bool g_WindowOpen = true;
 
 void OnDestroyed() {
@@ -29,11 +30,12 @@ void Render_WindowMain() {
     auto app = GetApp();
     Render_MetadataFor("RootMap", app.RootMap);
     auto si = cast<CTrackManiaNetworkServerInfo>(app.Network.ServerInfo);
+    UI::Text("\\$i\\$aaa"+Icons::QuestionCircle+": \"Alt\" metadata is probably NetWrite declarations");
     Render_MetadataFor("si.TeamProfile0", si.TeamProfile0);
     Render_MetadataFor("si.TeamProfile1", si.TeamProfile1);
     Render_MetadataFor("si.TeamProfile2", si.TeamProfile2);
     if (app.CurrentPlayground !is null) {
-        UI::Text("Playground Players");
+        UI::SeparatorText("Playground Players");
         UI::Indent();
         Render_MdForPlayground(app.CurrentPlayground);
         UI::Unindent();
@@ -84,7 +86,12 @@ void Render_Metadata(const string &in name, MetadataReader@ md) {
             CopiableLabeledPtr(md.bufLocation);
             UI::SeparatorText("Metadata Entries");
             auto rows = md.GetAllMetadataEntries();
-            if (UI::BeginTable("mdt."+name, 10, UI::TableFlags::SizingStretchProp)) {
+            if (UI::BeginTable("mdt."+name, 4, UI::TableFlags::SizingFixedSame)) {
+                UI::TableSetupColumn("Ptr & Name", UI::TableColumnFlags::WidthStretch, 0.45);
+                UI::TableSetupColumn("Type Name", UI::TableColumnFlags::WidthFixed, 70);
+                UI::TableSetupColumn("Type ID", UI::TableColumnFlags::WidthFixed, 70);
+                UI::TableSetupColumn("Value", UI::TableColumnFlags::WidthStretch, 0.35);
+
                 UI::ListClipper clip(rows.Length);
                 while (clip.Step()) {
                     for (int i = clip.DisplayStart; i < clip.DisplayEnd; i++) {
@@ -127,7 +134,7 @@ void Render_MetadataEl_TableRow(MetadataRow@ row) {
     UI::TableNextColumn();
     UI::Text(Text::Format("0x%x", row.TypeRaw));
     UI::TableNextColumn();
-    UI::Text(row.ValueToString);
+    CopiableValue(row.ValueToString);
     // UI::TableNextColumn();
     // UI::Text(Text::FormatPointer(row.x20));
     // UI::TableNextColumn();

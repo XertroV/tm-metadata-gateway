@@ -88,6 +88,7 @@ class MetadataReader {
     }
 
     MetadataReader(CGameScriptPlayer@ player, bool alt = false) {
+        // alt -> netwrite maybe -- only defined for local player; throws otherwise
         auto clientSmdPtr = alt
             ? Dev::GetOffsetUint64(player, 0x20)
             : Dev::GetOffsetUint64(player, 0x38);
