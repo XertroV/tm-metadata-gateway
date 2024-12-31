@@ -11,6 +11,7 @@ void OnDestroyed() {
 }
 
 void Render() {
+#if SIG_DEVELOPER
     if (!g_WindowOpen) return;
     UI::SetNextWindowSize(500, 300, UI::Cond::FirstUseEver);
     if (UI::Begin(MenuTitle, g_WindowOpen)) {
@@ -18,15 +19,26 @@ void Render() {
         Render_WindowMain();
     }
     UI::End();
+#endif
 }
 
 void RenderMenu() {
+#if SIG_DEVELOPER
     if (UI::MenuItem(MenuTitle, "", g_WindowOpen)) {
         g_WindowOpen = !g_WindowOpen;
     }
+#else
+    UI::BeginDisabled();
+    UI::MenuItem(MenuTitle + " (Requires Dev Mode)", "", g_WindowOpen);
+    UI::EndDisabled();
+#endif
 }
 
 void Render_WindowMain() {
+    if (!Meta::IsDeveloperMode()) {
+        UI::Text("Developer mode is required to use this plugin");
+        return;
+    }
     auto app = GetApp();
     Render_MetadataFor("RootMap", app.RootMap);
     auto si = cast<CTrackManiaNetworkServerInfo>(app.Network.ServerInfo);
@@ -72,6 +84,7 @@ void Render_MetadataFor(const string &in name, CGameTeamProfile@ team) {
     Render_Metadata(name + " Alt", CreateAltMTReaderForTeam(team));
 }
 
+
 void Render_MetadataFor(const string &in name, CGameCtnChallenge@ map) {
     if (map is null) {
         UI::Text(name + " is null");
@@ -79,6 +92,7 @@ void Render_MetadataFor(const string &in name, CGameCtnChallenge@ map) {
     }
     Render_Metadata(name, MetadataReader(map));
 }
+
 
 void Render_Metadata(const string &in name, MetadataReader@ md) {
     if (UI::TreeNode("Metadata: " + name)) {
