@@ -28,6 +28,35 @@ MetadataReader@ CreateAltMTReaderForTeam(CGameTeamProfile@ team) {
     }
 }
 
+MetadataReader@ CreateMDReaderForUI(CGamePlaygroundUIConfig@ ui) {
+    try {
+        return MetadataReader(ui);
+    } catch {
+        return null;
+    }
+}
+
+// not the right type; some string is of 2 bil length
+// MetadataReader@ CreateMDReaderForUI_Alt1(CGamePlaygroundUIConfig@ ui) {
+//     try {
+//         auto ptr = Dev::GetOffsetUint64(ui, 0x20);
+//         if (ptr == 0) return null;
+//         return MetadataReader(ptr + 0x10);
+//     } catch {
+//     }
+//     return null;
+// }
+
+MetadataReader@ CreateMDReaderForUI_Alt2(CGamePlaygroundUIConfig@ ui) {
+    try {
+        auto ptr = Dev::GetOffsetUint64(ui, 0x30);
+        if (ptr == 0) return null;
+        return MetadataReader(ptr + 0x10);
+    } catch {
+        return null;
+    }
+}
+
 MetadataReader@ CreateMDReaderForScore(CGamePlaygroundScore@ score) {
     try {
         return MetadataReader(score);
@@ -82,6 +111,13 @@ class MetadataReader {
 
     MetadataReader(CGameScriptPlayer@ player) {
         auto clientSmdPtr = Dev::GetOffsetUint64(player, 0x38);
+        if (clientSmdPtr == 0) throw("MetadataReader: clientSmdPtr is null");
+        bufLocation = clientSmdPtr + 0x10;
+        InitFromBufLoc(bufLocation);
+    }
+
+    MetadataReader(CGamePlaygroundUIConfig@ ui) {
+        auto clientSmdPtr = Dev::GetOffsetUint64(ui, 0x38);
         if (clientSmdPtr == 0) throw("MetadataReader: clientSmdPtr is null");
         bufLocation = clientSmdPtr + 0x10;
         InitFromBufLoc(bufLocation);
@@ -313,6 +349,6 @@ string ReadStringAt(uint64 ptr) {
     if (Dev::ReadUInt8(ptr + 0xB) & 1 == 1) {
         return Dev::ReadCString(Dev::ReadUInt64(ptr), len);
     }
-    if (len > 11) throw("ReadStringAt: name string is too long");
+    if (len > 11) throw("ReadStringAt: string is too long for flags! (" + tostring(len) + ")");
     return Dev::ReadCString(ptr, len);
 }

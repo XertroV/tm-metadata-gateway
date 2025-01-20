@@ -47,6 +47,12 @@ void Render_WindowMain() {
     Render_MetadataFor("si.TeamProfile1", si.TeamProfile1);
     Render_MetadataFor("si.TeamProfile2", si.TeamProfile2);
     if (app.CurrentPlayground !is null) {
+        UI::SeparatorText("UI Configs");
+        UI::Indent();
+        Render_MetadataFor("ClientManiaAppPlayground.UI", app.Network.ClientManiaAppPlayground.UI);
+        Render_MetadataFor("ClientManiaAppPlayground.ClientUI", app.Network.ClientManiaAppPlayground.ClientUI);
+        UI::Unindent();
+
         UI::SeparatorText("Playground Players");
         UI::Indent();
         Render_MdForPlayground(app.CurrentPlayground);
@@ -91,6 +97,16 @@ void Render_MetadataFor(const string &in name, CGameCtnChallenge@ map) {
         return;
     }
     Render_Metadata(name, MetadataReader(map));
+}
+
+void Render_MetadataFor(const string &in name, CGamePlaygroundUIConfig@ ui) {
+    if (ui is null) {
+        UI::Text(name + " is null");
+        return;
+    }
+    Render_Metadata(name, CreateMDReaderForUI(ui));
+    // Render_Metadata(name + " Alt1", CreateMDReaderForUI_Alt1(ui));
+    Render_Metadata(name + " Alt", CreateMDReaderForUI_Alt2(ui));
 }
 
 
