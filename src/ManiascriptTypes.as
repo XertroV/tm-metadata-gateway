@@ -14,7 +14,8 @@ enum MsType {
     // Are these always the same?
     TextArray = 0x227,
 
-    // 0x2e7 - december 2024
+    // 0x2e7 - december 2024\
+    // 0x1247 - july 2025\
     IntArray = 0x1247,
     // IntArray = 0x467,
     TextArrayByInt = 0x4A7,
