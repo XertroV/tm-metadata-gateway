@@ -15,7 +15,7 @@ enum MsType {
     TextArray = 0x227,
 
     // 0x2e7 - december 2024
-    IntArray = 0x2e7,
+    IntArray = 0x1247,
     // IntArray = 0x467,
     TextArrayByInt = 0x4A7,
     TextArrayByText = 0x6A7,
